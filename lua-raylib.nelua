@@ -1,43 +1,44 @@
 ##[[
     cflags "-I modules/include"
+    if ccinfo.is_emscripten then
+        cflags "--shell-file minishell.html"
+    end
 ]]
 
 require "modules/minilua"
 require "arg"
 require "io"
 
-local mainLuaState: *lua_State = nilptr
 local L: *lua_State = nilptr
 
 local function InitLuaDevice(): void
-    mainLuaState = luaL_newstate()
-    L = mainLuaState
-
-    assert(mainLuaState ~= nilptr)
+    L = luaL_newstate()
+    assert(L ~= nilptr)
 
     luaL_openlibs(L)
 end
 
 local function ExecuteLuaFile(file: string): void
-    local result = luaL_dofile(L, file)
+    local result = luaL_dofile(L, "./test.lua")
+    luaL_loadstring(L, "print 'hello world'")
+    lua_call(L, 0, 0)
 
     switch result do
     case LUA_OK then
         -- DO NOTHING
     case LUA_ERRRUN then
-        io.printf("Lua Runtime Error: %s", lua_tostring(L, -1))
+        io.printf("Lua Runtime Error: %s \n", lua_tostring(L, -1))
     case LUA_ERRMEM then
-        io.printf("Lua Memory Error: %s", lua_tostring(L, -1))
+        io.printf("Lua Memory Error: %s \n", lua_tostring(L, -1))
     else
-        io.printf("Lua Error: %s", lua_tostring(L, -1))
+        io.printf("Lua Error: %s \n", lua_tostring(L, -1))
     end
 end
 
 local function CloseLuaDevice(): void
-    mainLuaState = nilptr
     L = nilptr
 end
 
-InitLuaDevice();
-ExecuteLuaFile("main.lua");
-CloseLuaDevice();
+    InitLuaDevice();
+    ExecuteLuaFile(arg[1]);
+    CloseLuaDevice();

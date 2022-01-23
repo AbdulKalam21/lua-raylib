@@ -6,6 +6,7 @@ Lua bindings for raylib, heavily inspired by [raylib-lua](https://github.com/ray
 ## Prerequisites
 * Nelua Compiler
 * GCC
+* Emscripten(optional)
 
 For setting up the above mentioned, you can follow [this tutorial](https://github.com/AKDev21/nelua-tutorials/blob/main/Getting-Started.md)
 
@@ -13,6 +14,7 @@ For setting up the above mentioned, you can follow [this tutorial](https://githu
 * ```git clone https://github.com/AKDev21/lua-raylib```
 * ```cd lua-raylib```
 * ```nelua lua-raylib.nelua -o lua-raylib```
+
 
 ## Usage
 * ```./lua-raylib test.lua```
