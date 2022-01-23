@@ -1,5 +1,5 @@
 # lua-raylib
-Lua bindings for raylib, heavily inspired by [raylib-lua](https://github.com/raysan5/raylib-lua)
+Lua bindings for raylib, heavily inspired by [raylib-lua](https://github.com/raysan5/raylib-lua) written in [nelua](http://nelua.io/) programming language
 
 #### NOTE: Pre built binaries will be provided in future, fow now you have to build from source
 
@@ -15,7 +15,7 @@ For setting up the above mentioned, you can follow [this tutorial](https://githu
 * ```nelua lua-raylib.nelua -o lua-raylib```
 
 ## Usage
-* ```./lua-raylib filename.lua```
+* ```./lua-raylib test.lua```
 
 ## Contact
 * [Nelua Discord Server](https://discord.com/invite/7aaGeG7)
