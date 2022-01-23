@@ -1,7 +1,7 @@
 # lua-raylib
 Lua bindings for raylib, heavily inspired by [raylib-lua](https://github.com/raysan5/raylib-lua)
 
-#### NOTE: Pre built binaries will be provided in future, fow now you have to build from souce
+#### NOTE: Pre built binaries will be provided in future, fow now you have to build from source
 
 ## Prerequisites
 * Nelua Compiler

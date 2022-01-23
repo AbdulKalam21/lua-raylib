@@ -1,0 +1,43 @@
+##[[
+    cflags "-I modules/include"
+]]
+
+require "modules/minilua"
+require "arg"
+require "io"
+
+local mainLuaState: *lua_State = nilptr
+local L: *lua_State = nilptr
+
+local function InitLuaDevice(): void
+    mainLuaState = luaL_newstate()
+    L = mainLuaState
+
+    assert(mainLuaState ~= nilptr)
+
+    luaL_openlibs(L)
+end
+
+local function ExecuteLuaFile(file: string): void
+    local result = luaL_dofile(L, file)
+
+    switch result do
+    case LUA_OK then
+        -- DO NOTHING
+    case LUA_ERRRUN then
+        io.printf("Lua Runtime Error: %s", lua_tostring(L, -1))
+    case LUA_ERRMEM then
+        io.printf("Lua Memory Error: %s", lua_tostring(L, -1))
+    else
+        io.printf("Lua Error: %s", lua_tostring(L, -1))
+    end
+end
+
+local function CloseLuaDevice(): void
+    mainLuaState = nilptr
+    L = nilptr
+end
+
+InitLuaDevice();
+ExecuteLuaFile("main.lua");
+CloseLuaDevice();
