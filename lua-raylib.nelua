@@ -2,6 +2,7 @@
     cflags "-I modules/include"
     if ccinfo.is_emscripten then
         cflags "--shell-file minishell.html"
+        cflags "--preload-file ."
     end
 ]]
 
@@ -11,34 +12,40 @@ require "io"
 
 local L: *lua_State = nilptr
 
-local function InitLuaDevice(): void
+local function InitLuaState(): void
     L = luaL_newstate()
-    assert(L ~= nilptr)
-
+    assert(L ~= nilptr, "Faild to InitLuaState")
     luaL_openlibs(L)
 end
 
 local function ExecuteLuaFile(file: string): void
-    local result = luaL_dofile(L, "./test.lua")
-    luaL_loadstring(L, "print 'hello world'")
-    lua_call(L, 0, 0)
+      local result = luaL_dofile(L, file)
 
     switch result do
-    case LUA_OK then
+        case LUA_OK then
         -- DO NOTHING
-    case LUA_ERRRUN then
-        io.printf("Lua Runtime Error: %s \n", lua_tostring(L, -1))
-    case LUA_ERRMEM then
-        io.printf("Lua Memory Error: %s \n", lua_tostring(L, -1))
-    else
-        io.printf("Lua Error: %s \n", lua_tostring(L, -1))
+        case LUA_ERRRUN then
+            io.printf("Lua Runtime Error: %s \n", lua_tostring(L, -1))
+        case LUA_ERRMEM then
+            io.printf("Lua Memory Error: %s \n", lua_tostring(L, -1))
+        else
+            io.printf("Lua Error: %s \n", lua_tostring(L, -1))
     end
 end
 
-local function CloseLuaDevice(): void
+local function CloseLuaState(): void
     L = nilptr
+    assert(L == nilptr, "Failed to CloseLuaState")
 end
 
-    InitLuaDevice();
-    ExecuteLuaFile(arg[1]);
-    CloseLuaDevice();
+## if not ccinfo.is_emscripten then
+if arg[1] ~= "" then
+    InitLuaState()
+    ExecuteLuaFile(arg[1])
+    CloseLuaState()
+end
+## else
+InitLuaState()
+ExecuteLuaFile("test.lua")
+CloseLuaState()
+## end
